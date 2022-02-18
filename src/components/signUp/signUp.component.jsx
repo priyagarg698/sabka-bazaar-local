@@ -9,19 +9,21 @@ const SignUp = () => {
     lastName: "",
     email: "",
     password: "",
-    confimPassword: ""
+    confirmPassword: "",
   });
   const [inputError, setInputError] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const {firstName, lastName, email, password, confimPassword } = userCredentials;
+  const { firstName, lastName, email, password, confirmPassword } =
+    userCredentials;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(password !== confimPassword){
-        return alert("Password do not match");
+    if (password !== confirmPassword) {
+      return;
     }
     alert("Sign In successfull");
   };
@@ -29,7 +31,6 @@ const SignUp = () => {
   const handleChange = (event) => {
     const { value, name } = event.target;
     setCredentials({ ...userCredentials, [name]: value });
-    debugger;
     if (event.target.name === "email") {
       const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 
@@ -52,16 +53,24 @@ const SignUp = () => {
         setInputError({ ...inputError, [name]: "" });
       }
     }
+
+    if (event.target.name === "confirmPassword") {
+      if (password !== event.target.value) {
+        setInputError({ ...inputError, [name]: "Password do not match" });
+      } else {
+        setInputError({ ...inputError, [name]: "" });
+      }
+    }
   };
 
   return (
-    <div className="sign-in">
-      <div className="signIn__content">
-        <h2 className="title">Login</h2>
-        <span>Get access to your Orders, Wishlist and Recommensations</span>
+    <div className="sign-up">
+      <div className="signUp__content">
+        <h2 className="title">Signup</h2>
+        <span>We do not share your personal details with anyone.</span>
       </div>
-      <form onSubmit={handleSubmit} className="signIn__form">
-      <FormInput
+      <form onSubmit={handleSubmit} className="signUp__form">
+        <FormInput
           name="firstName"
           type="text"
           label="First Name"
@@ -99,16 +108,21 @@ const SignUp = () => {
           name="confirmPassword"
           type="password"
           label="Confirm Password"
-          value={password}
+          value={confirmPassword}
           handleChange={handleChange}
           required
+          error={inputError.confirmPassword}
         />
         <CustomButton
           type="submit"
           className="buttons"
-          disabled={inputError.email || inputError.password}
+          disabled={
+            inputError.email ||
+            inputError.password ||
+            inputError.confirmPassword
+          }
         >
-          Sign In
+          Signup
         </CustomButton>
       </form>
     </div>

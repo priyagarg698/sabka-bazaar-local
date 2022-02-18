@@ -3,7 +3,7 @@ import CustomButton from "../custom-button/custom-button.component";
 import FormInput from "../FormInput/FormInput.component";
 import "./signIn.styles.scss";
 
-const SignInComp = () => {
+const SignIn = () => {
   const [userCredentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -85,4 +85,4 @@ const SignInComp = () => {
     </div>
   );
 };
-export default SignInComp;
+export default SignIn;

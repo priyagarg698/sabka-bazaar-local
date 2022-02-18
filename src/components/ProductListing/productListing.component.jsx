@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { withRouter, useParams } from "react-router-dom";
-import ProductCard from "../../components/ProductCard/product-card.component";
-import SideBar from "../../components/sideBar/side-bar.component";
-import WithSpinner from "../../components/with-spinner/with-spinner.component";
+import DropDown from "../dropdown/dropdown.component";
+import ProductCard from "../ProductCard/product-card.component";
+import SideBar from "../sideBar/side-bar.component";
+import WithSpinner from "../with-spinner/with-spinner.component";
 import { getData } from "../../uitls/common.utils";
 import "./productListing.styles.scss";
 
-const ProductListing = ({history}) => {
+const ProductListing = ({ history }) => {
   const [productData, setProductData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryData, setCategoryData] = useState([]);
-//   const [selectedCatergoryId, setSelectedCatergoryId] = useState();
+  const [selectedCatergoryId, setSelectedCatergoryId] = useState();
   const [userSelectedProducts, setUserSelectedProducts] = useState([]);
-  console.log("LLLLLLLLLLLLLLLLLLLLLLL", useParams())
-  const {collectionId} = useParams();
+  let { collectionId } = useParams();
+  console.log("PPPPPPPPPPPPP", collectionId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,17 +24,16 @@ const ProductListing = ({history}) => {
         const productsData = await getData("http://localhost:5000/products");
         setProductData(productsData);
 
-        if (collectionId) {
+        if (selectedCatergoryId) {
           const filterData = productData.filter(
-            (product) => product.category === collectionId
+            (product) => product.category === selectedCatergoryId
           );
           setUserSelectedProducts(filterData);
-          console.log("selected Category ID", collectionId);
+          console.log("selected Category ID", selectedCatergoryId);
         } else {
           setUserSelectedProducts(productsData);
         }
         setIsLoading(false);
-
       } catch (error) {
         console.log("error", error.message);
       }
@@ -43,6 +43,19 @@ const ProductListing = ({history}) => {
   }, []);
 
   const handleCategoryChange = (id) => {
+    if (selectedCatergoryId === id) {
+      return setUserSelectedProducts(productData);
+    } else {
+      const filterData = productData.filter(
+        (product) => product.category === id
+      );
+      setUserSelectedProducts(filterData);
+      setSelectedCatergoryId(id);
+    }
+  };
+
+  const handleDropDownChange = (e) => {
+    const id = e.target.value;
     if (collectionId === id) {
       return setUserSelectedProducts(productData);
     } else {
@@ -50,7 +63,7 @@ const ProductListing = ({history}) => {
         (product) => product.category === id
       );
       setUserSelectedProducts(filterData);
-      collectionId= id;
+      collectionId = id;
     }
   };
   return (
@@ -61,12 +74,16 @@ const ProductListing = ({history}) => {
         <div className="product_listing">
           <SideBar
             categoryData={categoryData}
-            id={collectionId}
+            id={selectedCatergoryId}
+            name="select"
             handleCategoryChange={handleCategoryChange}
           ></SideBar>
-          {/* <div className="category_dropdown">
-            
-          </div> */}
+          <div className="category_dropdown">
+            <DropDown
+              categoryData={categoryData}
+              handleDropDownChange={handleDropDownChange}
+            ></DropDown>
+          </div>
           <div className="category__description">
             {userSelectedProducts.map((product, index) => (
               <ProductCard key={index} product={product}></ProductCard>
@@ -78,4 +95,4 @@ const ProductListing = ({history}) => {
   );
 };
 
-export default (ProductListing);
+export default ProductListing;

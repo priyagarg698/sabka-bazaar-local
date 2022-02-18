@@ -1,39 +1,44 @@
-.sign-in {
+.sign-up {
     display: flex;
     flex-direction: row;
-    padding: 1rem 10rem 1rem 10rem;
-    align-items: center;
+    padding: 0rem 15rem 0rem 6rem;
   
-    .signIn__content {
+    .signUp__content {
       width: 40%;
+      padding-top: 2.5rem;
     }
   
-    .signIn__form {
-      width: 60%;
+    .signUp__form {
+      width: 40%;
+      padding: 0.5rem;
     }
   
     .buttons {
       width: -webkit-fill-available;
+      // margin-bottom: 3rem;
     }
   }
   @media screen and (max-width: 480px) {
-      .sign-in {
+      .sign-up {
           display: flex;
           flex-direction: column;
           padding: 0px;
         
-          .signIn__content {
+          .signUp__content {
             width: 100%;
+            padding-top: 0px;
           }
         
-          .signIn__form {
+          .signUp__form {
             width: 100%;
+            padding: 0px;
           }
   }
   }
   @media screen and (min-device-width: 481px) and (max-device-width: 768px) {
-      .sign-in {
+      .sign-up {
           padding: 1rem 4rem 1rem 4rem;
+          
         }
     }
   
