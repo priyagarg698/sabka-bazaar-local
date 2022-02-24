@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import CustomButton from "../custom-button/custom-button.component";
 import FormInput from "../FormInput/FormInput.component";
 import "./signUp.styles.scss";
+import { withRouter } from "react-router-dom";
 
-const SignUp = () => {
+
+const SignUp = ({history}) => {
   const [userCredentials, setCredentials] = useState({
     firstName: "",
     lastName: "",
@@ -25,7 +27,7 @@ const SignUp = () => {
     if (password !== confirmPassword) {
       return;
     }
-    alert("Sign In successfull");
+    history.push(`/`);
   };
 
   const handleChange = (event) => {
@@ -43,7 +45,7 @@ const SignUp = () => {
     }
 
     if (event.target.name === "password") {
-      const passworPattern = /(?=^.{6,30}$)(?=.*\d)(?=.*[a-zA-Z])(?!.*\s)/;
+      const passworPattern = /(?=^.{6,10}$)(?=.*\d)(?=.*[a-zA-Z])(?!.*\s)/;
 
       if (!passworPattern.test(event.target.value)) {
         const passwordError =
@@ -128,4 +130,4 @@ const SignUp = () => {
     </div>
   );
 };
-export default SignUp;
+export default withRouter(SignUp);

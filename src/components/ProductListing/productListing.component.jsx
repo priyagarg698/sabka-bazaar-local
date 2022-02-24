@@ -1,98 +1,93 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter, useParams } from "react-router-dom";
 import DropDown from "../dropdown/dropdown.component";
 import ProductCard from "../ProductCard/product-card.component";
 import SideBar from "../sideBar/side-bar.component";
-import WithSpinner from "../with-spinner/with-spinner.component";
-import { getData } from "../../uitls/common.utils";
 import "./productListing.styles.scss";
+import { fetchCategoryData } from "../../actions";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 
-const ProductListing = ({ history }) => {
-  const [productData, setProductData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [categoryData, setCategoryData] = useState([]);
-  const [selectedCatergoryId, setSelectedCatergoryId] = useState();
-  const [userSelectedProducts, setUserSelectedProducts] = useState([]);
-  let { collectionId } = useParams();
-  console.log("PPPPPPPPPPPPP", collectionId);
+const ProductListing = ({ productData }) => {
+  const [defaultSelected, setDefaultSelected] = useState(true);
+  let { productId } = useParams();
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const categoryData = useSelector((state) => {
+    return state.categories.categoryData;
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const categories = await getData("http://localhost:5000/categories");
-        setCategoryData(categories);
-        const productsData = await getData("http://localhost:5000/products");
-        setProductData(productsData);
-
-        if (selectedCatergoryId) {
-          const filterData = productData.filter(
-            (product) => product.category === selectedCatergoryId
-          );
-          setUserSelectedProducts(filterData);
-          console.log("selected Category ID", selectedCatergoryId);
-        } else {
-          setUserSelectedProducts(productsData);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.log("error", error.message);
-      }
-    };
-
-    fetchData();
-  }, []);
+    dispatch(fetchCategoryData());
+  }, [dispatch]);
 
   const handleCategoryChange = (id) => {
-    if (selectedCatergoryId === id) {
-      return setUserSelectedProducts(productData);
+    if (productId === id || id === "Default") {
+      history.push(`/PLP`);
+      setDefaultSelected(true);
     } else {
-      const filterData = productData.filter(
-        (product) => product.category === id
-      );
-      setUserSelectedProducts(filterData);
-      setSelectedCatergoryId(id);
+      history.push(`/PLP/${id}`);
     }
   };
 
   const handleDropDownChange = (e) => {
     const id = e.target.value;
-    if (collectionId === id) {
-      return setUserSelectedProducts(productData);
+    if (productId === id || id === "Default") {
+      history.push(`/PLP`);
+      setDefaultSelected(true);
     } else {
-      const filterData = productData.filter(
-        (product) => product.category === id
-      );
-      setUserSelectedProducts(filterData);
-      collectionId = id;
+      history.push(`/PLP/${id}`);
     }
   };
+
+  const productClickHandler = async (product) => {
+    const headers = {
+      "Content-Type": "text/plain",
+    };
+    const data = await axios({
+      url: `http://localhost:5000/addToCart`,
+      method: "post",
+      data: {
+        id: product.id,
+      },
+      headers: headers,
+    })
+      .then((res) => Promise.resolve(res.data))
+      .catch((err) => Promise.reject(err));
+    if (data.response === "Success") {
+    }
+  };
+
   return (
     <div>
-      {isLoading ? (
-        <WithSpinner></WithSpinner>
-      ) : (
-        <div className="product_listing">
-          <SideBar
+      <div className="product_listing">
+        <SideBar
+          id={productId}
+          name="select"
+          handleCategoryChange={handleCategoryChange}
+        ></SideBar>
+        <div className="category_dropdown">
+          <DropDown
             categoryData={categoryData}
-            id={selectedCatergoryId}
-            name="select"
-            handleCategoryChange={handleCategoryChange}
-          ></SideBar>
-          <div className="category_dropdown">
-            <DropDown
-              categoryData={categoryData}
-              handleDropDownChange={handleDropDownChange}
-            ></DropDown>
-          </div>
-          <div className="category__description">
-            {userSelectedProducts.map((product, index) => (
-              <ProductCard key={index} product={product}></ProductCard>
-            ))}
-          </div>
+            productId={productId}
+            defaultSelected={defaultSelected}
+            handleDropDownChange={handleDropDownChange}
+          ></DropDown>
         </div>
-      )}
+        <div className="category__description">
+          {productData.map((product, index) => (
+            <ProductCard
+              key={index}
+              product={product}
+              productClickHandler={productClickHandler}
+            ></ProductCard>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default ProductListing;
+export default withRouter(ProductListing);

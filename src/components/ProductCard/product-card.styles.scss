@@ -2,11 +2,7 @@
   height: 22.7rem;
   width: 14rem;
   margin: 0.5rem;
-  // margin-bottom: 0.5rem;
-  // margin-left: 0.4rem;
-  // margin-right: 0.5rem;
   padding: 0.2rem;
-  // padding-bottom: 0.5rem;
   border-bottom: 2px dashed rgb(224, 222, 222);
   box-shadow: 8px 0 4px -3px rgb(219, 215, 215);
 }
@@ -14,6 +10,7 @@
 .pcard h4 {
   height: 15%;
   margin-block-end: 0.4rem;
+  margin-block-start: 1rem;
 }
 
 .pcard_img {
@@ -31,6 +28,8 @@
 
 .btn--big {
   width: 8rem;
+  align-items: center;
+
 }
 .pcard__para {
   background-color: rgb(218, 214, 214);
@@ -147,5 +146,4 @@
     height: 2.2rem;
     font-size: 0.9rem;
   }
-
 }

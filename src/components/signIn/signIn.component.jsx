@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import CustomButton from "../custom-button/custom-button.component";
 import FormInput from "../FormInput/FormInput.component";
 import "./signIn.styles.scss";
+import { withRouter } from "react-router-dom";
 
-const SignIn = () => {
+
+const SignIn = ({history}) => {
   const [userCredentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -14,17 +16,15 @@ const SignIn = () => {
   });
 
   const { email, password } = userCredentials;
-  //   const {emailError, passwordError} = inputError;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    alert("Sign In successfull");
+    history.push('/')
   };
 
   const handleChange = (event) => {
     const { value, name } = event.target;
     setCredentials({ ...userCredentials, [name]: value });
-    debugger;
     if (event.target.name === "email") {
       const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 
@@ -37,7 +37,7 @@ const SignIn = () => {
     }
 
     if (event.target.name === "password") {
-      const passworPattern = /(?=^.{6,30}$)(?=.*\d)(?=.*[a-zA-Z])(?!.*\s)/;
+      const passworPattern = /(?=^.{6,10}$)(?=.*\d)(?=.*[a-zA-Z])(?!.*\s)/;
 
       if (!passworPattern.test(event.target.value)) {
         const passwordError =
@@ -85,4 +85,4 @@ const SignIn = () => {
     </div>
   );
 };
-export default SignIn;
+export default withRouter(SignIn);

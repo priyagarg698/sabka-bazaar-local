@@ -2,16 +2,14 @@
   width: 100%;
   display: flex;
   height: calc(100vh - 7.5rem);
-  
 
   .category__description {
     flex: 5;
     display: flex;
     flex-wrap: wrap;
     overflow: auto;
-    // justify-content: center;
   }
-  .category_dropdown{
+  .category_dropdown {
     display: none;
   }
 }
@@ -23,10 +21,8 @@
     .category__container {
       display: none;
     }
-    .category_dropdown{
+    .category_dropdown {
       display: block;
-
-     
     }
   }
 }
@@ -38,7 +34,7 @@
       flex: 3;
       height: 100vh;
     }
-    .category_dropdown{
+    .category_dropdown {
       display: none;
     }
   }

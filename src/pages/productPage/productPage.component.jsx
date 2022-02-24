@@ -1,12 +1,24 @@
-import React from "react";
-import './productPage.styles.scss';
-import ProductCard from "../../components/ProductCard/product-card.component";
+import React, { useEffect, useState } from "react";
 
-const ProductPage = ({match}) => {
-    console.log("qroduct Page",match.params.productId)
-    return(
-        <div>Hello</div>
+import './productPage.styles.scss';
+import { useParams } from "react-router-dom";
+import ProductListing from "../../components/ProductListing/productListing.component";
+
+const ProductPage = ({productData}) => {
+    
+    const params = useParams()
+    const [filterData, setFilterData] = useState([]);
+
+
+    useEffect(()=>{
+        const filterData = productData.filter(ele => params.productId === ele.category);
+        setFilterData(filterData)
+    },[productData, params.productId])
+
+        return (
+          <div className="collection-page">
+            <ProductListing productData={filterData}></ProductListing>
+          </div>
     )
 }
-
-export default ProductPage;
+export default (ProductPage);
